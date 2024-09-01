@@ -3,6 +3,9 @@
 `backoff` is a Go package that provides iterators powered by
 [github.com/cenkalti/backoff/v4](https://pkg.go.dev/github.com/cenkalti/backoff/v4).
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/goaux/backoff.svg)](https://pkg.go.dev/github.com/goaux/backoff)
+[![Go Report Card](https://goreportcard.com/badge/github.com/goaux/backoff)](https://goreportcard.com/report/github.com/goaux/backoff)
+
 It offers a flexible and easy-to-use way to implement various backoff strategies
 in your Go applications.
 
