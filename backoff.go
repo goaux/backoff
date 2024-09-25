@@ -83,6 +83,9 @@ func NewExponential(options ...ExponentialOption) BackOff {
 	return newBackOff(eo.New)
 }
 
+// WithMaxRetries sets the upper limit of the retry loop count.
+//
+// See [backoff.WithMaxRetries].
 func WithMaxRetries(max uint64) Option {
 	return maxRetries(max)
 }
