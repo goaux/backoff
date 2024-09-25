@@ -1,9 +1,13 @@
 // Package backoff provides iterators powered by github.com/cenkalti/backoff/v4.
 //
-// This package provides the type [BackOff], which creates an iterator powered by
-// github.com/cenkalti/backoff/v4.
+// This package provides the type [BackOff] and [BackOffDuration], which
+// creates an iterator powered by github.com/cenkalti/backoff/v4.
+//
+// [BackOff] is used to configure a run-and-wait loop, and [BackOffDuration] is used to generate a sequence of wait times.
 //
 // [BackOff] can be created by [NewConstant] and [NewExponential].
+//
+// [BackOffDuration] can be created by [NewConstantDuration] and [NewExponentialDuration].
 //
 // There are four policies.
 //
@@ -12,9 +16,9 @@
 //   - [backoff.ConstantBackOff]
 //   - [backoff.ExponentialBackOff]
 //
-// Iteratros powered by StopBackOff, ZeroBackOff and ConstantBackOff can be created from [NewConstant].
+// Iteratros powered by StopBackOff, ZeroBackOff and ConstantBackOff can be created from [NewConstant] and [NewConstantDuration].
 //
-// Iterators powered by ExponentialBackOff can be created from [NewExponential].
+// Iterators powered by ExponentialBackOff can be created from [NewExponential] and [NewExponentialDuration].
 //
 // Iterators are used in `for statements with range clause` so that iteration can be easily terminated with `break`.
 // Alternatively, you can use [WithMaxRetries] to limit the number of retries.
