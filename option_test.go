@@ -1,11 +1,39 @@
 package backoff
 
 import (
+	"context"
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
 )
+
+func TestWithMaxRetries(t *testing.T) {
+	tests := []struct {
+		MaxRetries int
+	}{
+		{0},
+		{1},
+		{2},
+		{3},
+	}
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("max%d", tt.MaxRetries), func(t *testing.T) {
+			retryLoop := NewConstant(0, WithMaxRetries(uint64(tt.MaxRetries)))
+			i := 0
+			for range retryLoop(context.Background()) {
+				if i > tt.MaxRetries {
+					t.Fatal("too many retries")
+				}
+				i++
+			}
+			if i != tt.MaxRetries+1 {
+				t.Fatalf("loop %d times, expect %d", i, tt.MaxRetries)
+			}
+		})
+	}
+}
 
 func TestNewConstantOption(t *testing.T) {
 	opt := newConstantOption(
@@ -15,7 +43,7 @@ func TestNewConstantOption(t *testing.T) {
 	if opt.Interval != 1234 {
 		t.Error("interval")
 	}
-	if opt.MaxRetries != 7890 {
+	if *opt.MaxRetries != 7890 {
 		t.Error("WithMaxRetries")
 	}
 }
@@ -53,14 +81,14 @@ func TestNewExponentialOption(t *testing.T) {
 	if b.Clock != theClock {
 		t.Errorf("WithClock %#v %#v", b.Clock, theClock)
 	}
-	if opt.MaxRetries != 0 {
+	if opt.MaxRetries != nil {
 		t.Error("WithMaxRetries")
 	}
 
 	opt = newExponentialOption(
 		WithMaxRetries(7890),
 	)
-	if opt.MaxRetries != 7890 {
+	if *opt.MaxRetries != 7890 {
 		t.Error("WithMaxRetries")
 	}
 }

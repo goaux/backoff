@@ -97,11 +97,11 @@ func WithMaxRetries(max uint64) Option {
 type maxRetries uint64
 
 func (o maxRetries) applyToConstantOption(co *constantOption) {
-	co.MaxRetries = uint64(o)
+	co.MaxRetries = (*uint64)(&o)
 }
 
 func (o maxRetries) applyToExponentialOption(eo *exponentialOption) {
-	eo.MaxRetries = uint64(o)
+	eo.MaxRetries = (*uint64)(&o)
 }
 
 // Option is a optional parameter for [NewConstant] and [NewExponential].
@@ -133,7 +133,7 @@ type ExponentialOption interface {
 }
 
 type constantOption struct {
-	MaxRetries uint64
+	MaxRetries *uint64
 	Interval   time.Duration
 }
 
@@ -157,15 +157,15 @@ func (co *constantOption) New() backoff.BackOff {
 	} else {
 		b = backoff.NewConstantBackOff(co.Interval)
 	}
-	if co.MaxRetries > 0 {
-		b = backoff.WithMaxRetries(b, co.MaxRetries)
+	if co.MaxRetries != nil {
+		b = backoff.WithMaxRetries(b, *co.MaxRetries)
 	}
 	return b
 }
 
 type exponentialOption struct {
 	Options    []backoff.ExponentialBackOffOpts
-	MaxRetries uint64
+	MaxRetries *uint64
 }
 
 func newExponentialOption(options ...ExponentialOption) *exponentialOption {
@@ -178,8 +178,8 @@ func newExponentialOption(options ...ExponentialOption) *exponentialOption {
 
 func (eo *exponentialOption) New() (b backoff.BackOff) {
 	b = backoff.NewExponentialBackOff(eo.Options...)
-	if eo.MaxRetries > 0 {
-		b = backoff.WithMaxRetries(b, eo.MaxRetries)
+	if eo.MaxRetries != nil {
+		b = backoff.WithMaxRetries(b, *eo.MaxRetries)
 	}
 	return b
 }
